@@ -19,7 +19,7 @@ public class TextInputPrompt extends BaseScreen {
     public final TextBox enterText;
     public final Panel buttons;
     
-    public TextInputPrompt(QuestCreatorUI panel, ITextComponent title, String hintText, BiConsumer<TextInputPrompt, MouseButton> onConfirmed, BiConsumer<TextInputPrompt, MouseButton> onDenied) {
+    public TextInputPrompt(Panel panel, ITextComponent title, String hintText, BiConsumer<TextInputPrompt, MouseButton> onConfirmed, BiConsumer<TextInputPrompt, MouseButton> onDenied) {
         this.parent = panel;
         this.title = new TextField(this);
         this.title.setSize(100, 20);
