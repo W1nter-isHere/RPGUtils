@@ -16,10 +16,7 @@ import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.quest.PlayerQuestProgress;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
-import wintersteve25.rpgutils.common.network.ModNetworking;
-import wintersteve25.rpgutils.common.network.PacketLoadData;
-import wintersteve25.rpgutils.common.network.PacketOpenDialogueCreator;
-import wintersteve25.rpgutils.common.network.PacketOpenQuestCreator;
+import wintersteve25.rpgutils.common.network.*;
 import wintersteve25.rpgutils.common.systems.DialogueSystem;
 import wintersteve25.rpgutils.common.systems.QuestSystem;
 
@@ -34,7 +31,19 @@ public class ModCommands {
                 Commands.literal(RPGUtils.MOD_ID)
                         .then(Commands.literal("create_quests")
                                 .executes(ModCommands::openQuestCreator)));
+        
+        dispatcher.register(
+                Commands.literal(RPGUtils.MOD_ID)
+                        .then(Commands.literal("create_ui")
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                        .executes(ModCommands::openUICreator))));
 
+        dispatcher.register(
+                Commands.literal(RPGUtils.MOD_ID)
+                        .then(Commands.literal("open_ui")
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                        .executes(ModCommands::openUI))));
+        
         dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
                 .then(Commands.literal("reload")
                         .executes(ModCommands::reloadData)));
@@ -66,6 +75,16 @@ public class ModCommands {
         return 1;
     }
 
+    private static int openUICreator(CommandContext<CommandSource> source) throws CommandSyntaxException {
+        ModNetworking.sendToClient(new PacketOpenUICreator(source.getArgument("name", String.class)), source.getSource().getPlayerOrException());
+        return 1;
+    }
+
+    private static int openUI(CommandContext<CommandSource> source) throws CommandSyntaxException {
+        ModNetworking.sendToClient(new PacketOpenUI(source.getArgument("name", String.class)), source.getSource().getPlayerOrException());
+        return 1;
+    }
+    
     private static int reloadData(CommandContext<CommandSource> source) {
         ServerOnlyLoadedData.reloadAll();
 

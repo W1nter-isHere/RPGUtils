@@ -5,6 +5,7 @@ import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DialogueManag
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
 import wintersteve25.rpgutils.common.data.loaded.quest.QuestsManager;
+import wintersteve25.rpgutils.common.data.loaded.ui.UIManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ClientOnlyLoadedData {
         dataLoaders.add(DialogueManager.INSTANCE);
         dataLoaders.add(DialoguePoolManager.INSTANCE);
         dataLoaders.add(NPCTypeLoader.INSTANCE);
+        dataLoaders.add(UIManager.INSTANCE);
     }
     
     public static void reloadAll() {

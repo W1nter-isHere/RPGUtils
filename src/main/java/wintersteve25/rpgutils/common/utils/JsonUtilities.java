@@ -60,7 +60,7 @@ public class JsonUtilities {
 
         if (reload) {
             ClientOnlyLoadedData.reloadAll();
-        }        
+        }
     }
 
     public static void saveDialoguePool(ResourceLocation resourceLocation, Object jsonObject) {
@@ -69,6 +69,10 @@ public class JsonUtilities {
 
     public static void saveNpcAttributes(ResourceLocation resourceLocation, Object jsonObject) {
         saveData(resourceLocation, jsonObject, "/npc/attributes", true);
+    }
+    
+    public static void saveUI(ResourceLocation resourceLocation, JsonElement jsonObject) {
+        saveData(resourceLocation, jsonObject, "/ui/", true);
     }
 
     public static void saveQuest(ResourceLocation resourceLocation, Object jsonObject, boolean reload) {

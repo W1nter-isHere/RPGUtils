@@ -1,38 +1,26 @@
 package wintersteve25.rpgutils.client.ui_creator.context;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.ftb.mods.ftblibrary.icon.Icons;
-import dev.ftb.mods.ftblibrary.ui.*;
+import dev.ftb.mods.ftblibrary.ui.ContextMenu;
+import dev.ftb.mods.ftblibrary.ui.ContextMenuItem;
 import net.minecraft.util.text.StringTextComponent;
+import wintersteve25.rpgutils.client.ui_creator.UICreatorUI;
+import wintersteve25.rpgutils.client.ui_creator.widget.NewWidgetScreen;
 
-public class ClickBlankContextMenu extends Panel {
+import java.util.ArrayList;
+
+public class ClickBlankContextMenu extends ContextMenu {
     
-    private final int pressedAtX;
-    private final int pressedAtY;
+    public ClickBlankContextMenu(UICreatorUI panel, int pressedAtX, int pressedAtY) {
+        super(panel, new ArrayList<>());
+        
+        items.add(new ContextMenuItem(new StringTextComponent("Add"), Icons.ADD, () -> {
+            new NewWidgetScreen((customId, type) -> {
+                panel.createWidget(customId, type, pressedAtX, pressedAtY);
+                panel.openGui();
+            }).openGui();
+        }));
     
-    private final Button add;
-    
-    public ClickBlankContextMenu(Panel panel, int pressedAtX, int pressedAtY) {
-        super(panel);
-        this.pressedAtX = pressedAtX;
-        this.pressedAtY = pressedAtY;
-        this.add = new SimpleButton(this, new StringTextComponent("Add"), Icons.ADD_GRAY, (btn, mouse) -> {
-            
-        });
-    }
-
-    @Override
-    public void addWidgets() {
-        add();
-    }
-
-    @Override
-    public void drawBackground(MatrixStack matrixStack, Theme theme, int x, int y, int w, int h) {
-        theme.drawPanelBackground(matrixStack, x, y, w, h);
-    }
-
-    @Override
-    public void alignWidgets() {
-        align(new WidgetLayout.Vertical(0, 2, 0));
+        hasIcons = true;
     }
 }

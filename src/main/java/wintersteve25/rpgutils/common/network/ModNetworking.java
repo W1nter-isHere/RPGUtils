@@ -40,6 +40,18 @@ public class ModNetworking {
                 .consumer(PacketOpenQuestCreator::handle)
                 .add();
 
+        INSTANCE.messageBuilder(PacketOpenUICreator.class, nextID())
+                .encoder(PacketOpenUICreator::encode)
+                .decoder(PacketOpenUICreator::new)
+                .consumer(PacketOpenUICreator::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketOpenUI.class, nextID())
+                .encoder(PacketOpenUI::encode)
+                .decoder(PacketOpenUI::new)
+                .consumer(PacketOpenUI::handle)
+                .add();
+
         INSTANCE.messageBuilder(PacketPlaySound.class, nextID())
                 .encoder(PacketPlaySound::encode)
                 .decoder(PacketPlaySound::new)
