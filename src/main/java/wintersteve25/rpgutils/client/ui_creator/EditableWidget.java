@@ -141,8 +141,8 @@ public class EditableWidget extends Panel {
         
         if (moving) {
             if (isMouseButtonDown(MouseButton.LEFT)) {
-                setX(getMouseX() - getScreen().getGuiScaledWidth() / 2);
-                setY(getMouseY() - getScreen().getGuiScaledHeight() / 2);
+                setX(getMouseX());
+                setY(getMouseY());
             }
         }
     }
@@ -161,7 +161,7 @@ public class EditableWidget extends Panel {
 
         if (contextMenu != null) {
             if (button.isRight()) {
-                if (!previewing) {
+                if (!previewing && isMouseOver()) {
                     openContextMenu(contextMenu.create(this.getGui(), this));
                     return true;
                 }
@@ -254,7 +254,7 @@ public class EditableWidget extends Panel {
 
     @Override
     public void drawBackground(MatrixStack matrixStack, Theme theme, int x, int y, int w, int h) {
-        theme.drawPanelBackground(matrixStack, x, y, w, h);
+//        theme.drawPanelBackground(matrixStack, x, y, w, h);
     }
 
     private boolean resizeLeft(int mx) {
