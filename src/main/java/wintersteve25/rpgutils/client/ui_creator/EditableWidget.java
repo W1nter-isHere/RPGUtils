@@ -6,7 +6,6 @@ import dev.ftb.mods.ftblibrary.ui.Panel;
 import dev.ftb.mods.ftblibrary.ui.Theme;
 import dev.ftb.mods.ftblibrary.ui.Widget;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
-import net.minecraft.client.Minecraft;
 import wintersteve25.rpgutils.client.ui_creator.context.CustomContextMenuSupplier;
 import wintersteve25.rpgutils.client.ui_creator.serialization.UIProfile;
 import wintersteve25.rpgutils.client.ui_creator.serialization.template.WidgetInstance;
