@@ -1,6 +1,7 @@
 package wintersteve25.rpgutils.common.events;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -20,4 +21,5 @@ public class ClientModEvents {
         ModKeybinds.register();
         ClientOnlyLoadedData.reloadAll();
     }
+    
 }

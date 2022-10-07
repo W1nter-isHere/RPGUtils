@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class UIProfile {
@@ -38,6 +39,9 @@ public class UIProfile {
 
     private Map<String, WidgetInstance> children;
     private boolean finalized;
+    
+    private BiConsumer<String, WidgetInstance> onAddedCallback;
+    private Consumer<String> onRemovedCallback;
     
     public UIProfile() {
         children = new HashMap<>();
@@ -83,11 +87,23 @@ public class UIProfile {
     }
     
     public void onWidgetAdded(String id, WidgetInstance widget) {
+        if (onAddedCallback == null) return;
+        onAddedCallback.accept(id, widget);
     }
     
     public void onWidgetRemoved(String id) {
+        if (onRemovedCallback == null) return;
+        onRemovedCallback.accept(id);
     }
-    
+
+    public void setOnAddedCallback(BiConsumer<String, WidgetInstance> onAddedCallback) {
+        this.onAddedCallback = onAddedCallback;
+    }
+
+    public void setOnRemovedCallback(Consumer<String> onRemovedCallback) {
+        this.onRemovedCallback = onRemovedCallback;
+    }
+
     public void finalizeUI() {
         finalized = true;
         children = ImmutableMap.copyOf(children);

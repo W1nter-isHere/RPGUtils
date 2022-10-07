@@ -18,6 +18,8 @@ public interface IReward {
     Icon rewardIcon();
 
     ITextComponent rewardTitle();
+    
+    String rewardType();
 
     boolean isValidReward();
 }

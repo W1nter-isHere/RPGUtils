@@ -62,6 +62,11 @@ public class ItemReward implements IReward {
     }
 
     @Override
+    public String rewardType() {
+        return "Item";
+    }
+
+    @Override
     public boolean isValidReward() {
         return !item.isEmpty();
     }

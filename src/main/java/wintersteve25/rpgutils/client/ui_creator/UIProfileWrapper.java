@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.ftb.mods.ftblibrary.ui.BaseScreen;
 import dev.ftb.mods.ftblibrary.ui.Button;
 import dev.ftb.mods.ftblibrary.ui.Theme;
+import dev.ftb.mods.ftblibrary.ui.Widget;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
@@ -35,6 +36,11 @@ public class UIProfileWrapper extends BaseScreen implements IUIProfileUI {
         System.out.println(customId);
     }
 
+    @Override
+    public boolean onInit() {
+        return setFullscreen();
+    }
+    
     public static void open(String id) {
         UIProfile profile = UIManager.INSTANCE.getUIs().get(new ResourceLocation(RPGUtils.MOD_ID, id));
         if (profile == null) return;

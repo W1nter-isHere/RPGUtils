@@ -21,10 +21,10 @@ import java.util.Map;
 public class UICreatorUI extends BaseScreen implements IUIProfileUI {
     
     public static UICreatorUI activeInstance;
-    
+
+    public final Map<String, Widget> widgets;
     private final ResourceLocation name;
     private final UIProfile uiProfile;
-    private final Map<String, Widget> widgets;
     
     private boolean initialized;
     
@@ -32,18 +32,24 @@ public class UICreatorUI extends BaseScreen implements IUIProfileUI {
         this.name = new ResourceLocation(RPGUtils.MOD_ID, name);
         
         UIProfile profile = UIManager.INSTANCE.getUIs().get(this.name);
-        
-        uiProfile = profile == null ? new UIProfile() {
-            @Override
-            public void onWidgetAdded(String id, WidgetInstance widget) {
-                UICreatorUI.this.onWidgetAdded(id, widget);
-            }
+        if (profile != null) {
+            uiProfile = profile;
+            uiProfile.setOnAddedCallback(this::onWidgetAdded);
+            uiProfile.setOnRemovedCallback(this::onWidgetRemoved);
+        } else {
+            uiProfile = new UIProfile() {
+                @Override
+                public void onWidgetAdded(String id, WidgetInstance widget) {
+                    UICreatorUI.this.onWidgetAdded(id, widget);
+                }
 
-            @Override
-            public void onWidgetRemoved(String id) {
-                UICreatorUI.this.onWidgetRemoved(id);
-            }
-        } : profile;
+                @Override
+                public void onWidgetRemoved(String id) {
+                    UICreatorUI.this.onWidgetRemoved(id);
+                }
+            };
+        }
+        
         widgets = new HashMap<>();
     }
     
@@ -53,6 +59,8 @@ public class UICreatorUI extends BaseScreen implements IUIProfileUI {
             for (WidgetInstance widget : uiProfile.getChildren().values()) {
                 widgets.put(widget.getCustomId(), widget.createEditable(this, uiProfile));
             }
+            
+            initialized = true;
         }
         
         for (Widget widget : widgets.values()) {
@@ -114,6 +122,11 @@ public class UICreatorUI extends BaseScreen implements IUIProfileUI {
     public void onClosed() {
         super.onClosed();
         JsonUtilities.saveUI(name, uiProfile.saveToJson());
+    }
+
+    @Override
+    public boolean onInit() {
+        return setFullscreen();
     }
 
     public UIProfile getUiProfile() {

@@ -54,7 +54,7 @@ public class PanelWidgetInstance extends WidgetInstance {
         if (widget instanceof PanelWidget) {
             PanelWidget panelWidget = (PanelWidget) widget;
             panelWidget.setLayout(getLayout());
-            panelWidget.setAddWidgets(panel -> panel.widgets.addAll(getChildren().stream().map(widgetTemplate -> new EditableWidget(panel, uiProfile, getCustomId(), widgetTemplate)).collect(Collectors.toList())));
+            panelWidget.setAddWidgets(panel -> panel.widgets.addAll(getChildren().stream().map(widgetTemplate -> new EditableWidget(panel, uiProfile, widgetTemplate.getCustomId(), widgetTemplate)).collect(Collectors.toList())));
         }
 
         return new EditableWidget(parent, getWidgetType(), widget, uiProfile, getCustomId());

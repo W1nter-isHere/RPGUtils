@@ -44,10 +44,11 @@ public class EditableWidget extends Panel {
         this.widgetType = widgetType;
         this.widget = widget;
         this.widget.parent = this;
+        setPos(widget.getX(), widget.getY());
+        setSize(widget.width, widget.height);
+        this.widget.setPos(0, 0);
         this.uiProfile = uiProfile;
         this.customId = customId;
-        setSize(widget.width, widget.height);
-        setPos(widget.getX(), widget.getY());
     }
 
     @Override
@@ -69,6 +70,14 @@ public class EditableWidget extends Panel {
 
     public void setPreviewing(boolean previewing) {
         this.previewing = previewing;
+
+        if (widget instanceof Panel) {
+            for (Widget w : ((Panel) widget).widgets) {
+                if (w instanceof EditableWidget) {
+                    ((EditableWidget)w).setPreviewing(previewing);
+                }
+            }
+        }
     }
 
     public boolean isResizing() {
@@ -100,11 +109,12 @@ public class EditableWidget extends Panel {
     public void tick() {
         super.tick();
         
+        // TODO: change this absolute load of spaguetti
         if (resizing) {
             if (isMouseButtonDown(MouseButton.LEFT)) {
                 int mx = getMouseX();
                 int my = getMouseY();
-
+                
                 boolean right = resizeRight(mx);
                 boolean bottom = resizeBottom(my);
                 
@@ -135,13 +145,54 @@ public class EditableWidget extends Panel {
                         holding = HoldState.BOTTOM;
                     }
                 }
+
+                boolean left = resizeLeft(mx);
+                boolean top = resizeTop(my);
+                
+                if (left && top) {
+                    int changeInX = mx - initialMX;
+                    int w = width - changeInX;
+                    widget.setWidth(w);
+                    setWidth(w);
+                    setX(getX() + changeInX);
+                    initialMX = mx;
+                    
+                    int changeInY = my - initialMY;
+                    int h = height - changeInY;
+                    widget.setHeight(h);
+                    setHeight(h);
+                    setY(getY() + changeInY);
+                    initialMY = my;
+                    
+                    holding = HoldState.LEFT_TOP;
+                } else {
+                    if (left) {
+                        int changeInX = mx - initialMX;
+                        int w = width - changeInX;
+                        widget.setWidth(w);
+                        setWidth(w);
+                        setX(getX() + changeInX);
+                        initialMX = mx;
+                        holding = HoldState.LEFT;
+                    }
+
+                    if (top) {
+                        int changeInY = my - initialMY;
+                        int h = height - changeInY;
+                        widget.setHeight(h);
+                        setHeight(h);
+                        setY(getY() + changeInY);
+                        initialMY = my;
+                        holding = HoldState.TOP;
+                    }
+                }
             }
         }
         
         if (moving) {
             if (isMouseButtonDown(MouseButton.LEFT)) {
-                setX(getMouseX());
-                setY(getMouseY());
+                setX(getMouseX() - parent.getX());
+                setY(getMouseY() - parent.getY());
             }
         }
     }
@@ -151,7 +202,7 @@ public class EditableWidget extends Panel {
         if (widget instanceof Panel) {
             for (Widget w : ((Panel) widget).widgets) {
                 if (w instanceof EditableWidget && w.isMouseOver()) {
-                    return w.mousePressed(button);
+                    w.mousePressed(button);
                 }
             }
         }
@@ -191,6 +242,7 @@ public class EditableWidget extends Panel {
     public void mouseReleased(MouseButton button) {
         super.mouseReleased(button);
         
+        // not updating the editor because widget is updating self
         if (moving) {
             uiProfile.modifyChild(customId, false, instance -> {
                 instance.setX(getX());
@@ -202,6 +254,10 @@ public class EditableWidget extends Panel {
             uiProfile.modifyChild(customId, false, instance -> {
                 instance.setWidth(width);
                 instance.setHeight(height);
+                
+                // need to also save pos because resizing on the top and left side moves the widget
+                instance.setX(getX());
+                instance.setY(getY());
             });
             
             holding = HoldState.RELEASED;
@@ -253,7 +309,6 @@ public class EditableWidget extends Panel {
 
     @Override
     public void drawBackground(MatrixStack matrixStack, Theme theme, int x, int y, int w, int h) {
-//        theme.drawPanelBackground(matrixStack, x, y, w, h);
     }
 
     private boolean resizeLeft(int mx) {
